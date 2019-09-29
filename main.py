@@ -34,7 +34,7 @@ def fdt_for_each_subnode(fdt, nodeoffset):
             return
 
 
-def print_for_bms(fcc_lut_col_legend, fcc_lut_data, ocv_lut_row_legend, ocv_lut_col_legend, ocv_lut_data):
+def print_for_bms_old(fcc_lut_col_legend, fcc_lut_data, ocv_lut_row_legend, ocv_lut_col_legend, ocv_lut_data):
     fcc_temp_legend = ["{0}{2:d}{1}".format('(' if x < 0 else '', ')' if x < 0 else '', x) for x in
                        fcc_lut_col_legend]
     fcc_temp_legend = " ".join(fcc_temp_legend)
@@ -60,6 +60,32 @@ def print_for_bms(fcc_lut_col_legend, fcc_lut_data, ocv_lut_row_legend, ocv_lut_
     print("\tqcom,ocv-lut = /bits/ 16 <{}>;".format(ocv_lut))
 
 
+def print_for_bms_current(fcc_lut_col_legend, fcc_lut_data, ocv_lut_row_legend, ocv_lut_col_legend, ocv_lut_data):
+    fcc_temp_legend = ["{0}{2:d}{1}".format('(' if x < 0 else '', ')' if x < 0 else '', x) for x in
+                       fcc_lut_col_legend]
+    fcc_temp_legend = " ".join(fcc_temp_legend)
+
+    fcc_lut = [str(n * 1000) for n in fcc_lut_data]
+    fcc_lut = " ".join(fcc_lut)
+
+    ocv_capacity_legend = [str(n) for n in ocv_lut_row_legend]
+    ocv_capacity_legend = " ".join(ocv_capacity_legend)
+
+    ocv_temp_legend = ["{0}{2:d}{1}".format('(' if x < 0 else '', ')' if x < 0 else '', x) for x in
+                       ocv_lut_col_legend]
+    ocv_temp_legend = " ".join(ocv_temp_legend)
+
+    ocv_lut = [str(n * 1000) for n in ocv_lut_data]
+    ocv_lut = " ".join(ocv_lut)
+
+    print("\tqcom,fcc-temp-legend-celsius = /bits/ 8 <{}>;".format(fcc_temp_legend))
+    print("\tqcom,fcc-lut-microamp-hours = <{}>;".format(fcc_lut))
+    print()
+    print("\tqcom,ocv-capacity-legend = /bits/ 8 <{}>;".format(ocv_capacity_legend))
+    print("\tqcom,ocv-temp-legend-celsius = /bits/ 8 <{}>;".format(ocv_temp_legend))
+    print("\tqcom,ocv-lut-microvolt = <{}>;".format(ocv_lut))
+
+
 def print_for_bms_next(fcc_lut_col_legend, fcc_lut_data, ocv_lut_row_legend, ocv_lut_col_legend, ocv_lut_data):
     ocv_temperatures = ["{0}{2:d}{1}".format('(' if x < 0 else '', ')' if x < 0 else '', x) for x in
                         ocv_lut_col_legend]
@@ -80,6 +106,8 @@ def print_for_bms_next(fcc_lut_col_legend, fcc_lut_data, ocv_lut_row_legend, ocv
                     print('\t\t\t       ', end='')
             print("<{} {}>".format(volt, capacity), end='')
         print(';')
+
+    # TODO Handle fcc_lut_col_legend , fcc_lut_data , temp
 
 
 def main():
@@ -121,8 +149,10 @@ def main():
         print("bms@4000 {")
         print("\tstatus = \"okay\";")
 
-        print("\n\t/* bms */")
-        print_for_bms(fcc_lut_col_legend, fcc_lut_data, ocv_lut_row_legend, ocv_lut_col_legend, ocv_lut_data)
+        print("\n\t/* bms old */")
+        print_for_bms_old(fcc_lut_col_legend, fcc_lut_data, ocv_lut_row_legend, ocv_lut_col_legend, ocv_lut_data)
+        print("\n\t/* bms current */")
+        print_for_bms_current(fcc_lut_col_legend, fcc_lut_data, ocv_lut_row_legend, ocv_lut_col_legend, ocv_lut_data)
         print("\n\t/* bms next */")
         print_for_bms_next(fcc_lut_col_legend, fcc_lut_data, ocv_lut_row_legend, ocv_lut_col_legend, ocv_lut_data)
 

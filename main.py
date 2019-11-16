@@ -91,7 +91,7 @@ def print_for_bms_next(fcc_lut_col_legend, fcc_lut_data, ocv_lut_row_legend, ocv
                         ocv_lut_col_legend]
     ocv_temperatures = " ".join(ocv_temperatures)
 
-    print("\tocv-capacity-table-temperatures = <{}>;".format(ocv_temperatures))
+    print("\tocv-capacity-celsius = <{}>;".format(ocv_temperatures))
 
     for index, temp in enumerate(ocv_lut_col_legend):
         print("\tocv-capacity-table-{} = ".format(index), end='')
